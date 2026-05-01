@@ -24,6 +24,8 @@ If any file conflicts with a higher-precedence instruction, raise a conflict in 
 
 ## 2) Hard invariants (must not be violated)
 ### 2.5 Critical 2026 Invariants (NO DRIFT)
+- **Branch-based Workflow**: NEVER push directly to `main` for new features or complex fixes. Use branches: `feat/` for features, `fix/` for bugs, `chore/` for maintenance.
+- **PR-First Policy**: All changes must be merged via Pull Request after CI passes.
 - **React2Shell Safety**: NEVER alter the React version in `package.json`. Downgrading below 19.4.0 (specifically 19.0.0/19.2.0) triggers a CVSS 10.0 RCE vulnerability.
 - **Next.js 16.2 Routing**: NEVER create `middleware.ts`. All routing/proxy logic MUST live in `proxy.ts`.
 - **Tailwind v4 Config**: NEVER create `tailwind.config.js`. All configuration MUST be in `globals.css` via `@theme`.
