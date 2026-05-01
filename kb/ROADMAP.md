@@ -44,32 +44,32 @@ ANCHOR’s mission: generate a deterministic, evidence-backed “base pack” th
 Goal: a working wizard that produces a deterministic ZIP containing:
 docs + evidence + skills + guardrails + validation report + manifest.
 
-## MVP-0 — Repo baseline & policies (Week 1)
+## MVP-0 — Repo baseline & policies (Week 1) ✅ DONE
 Deliverables:
-- Next.js 16 + TypeScript + Tailwind + shadcn/ui scaffold
-- Local-first draft storage (IndexedDB)
-- Core docs in this repo internally consistent:
+- [x] Next.js 16 + TypeScript + Tailwind + shadcn/ui scaffold
+- [x] Local-first draft storage (IndexedDB)
+- [x] Core docs in this repo internally consistent:
   - README / ROADMAP / ARCHITECTURE / PROJECT_CONTEXT / DECISIONS / SECURITY / TESTING / API_SPEC / DEPLOYMENT
-- Canonical types/contracts defined in `API_SPEC.md`
-- Agent entrypoint contract:
+- [x] Canonical types/contracts defined in `API_SPEC.md`
+- [x] Agent entrypoint contract:
   - `GEMINI.md` tiny read-order file that points to `AGENTS.md`
   - `AGENTS.md` is canonical rules
 
-## MVP-1 — Canonical Spec + deterministic artifacts (Week 1–2)
+## MVP-1 — Canonical Spec + deterministic artifacts (Week 1–2) ✅ DONE
 Deliverables:
-- `ProjectSpec` canonical JSON structure
-- Deterministic artifact format:
+- [x] `ProjectSpec` canonical JSON structure
+- [x] Deterministic artifact format:
   - `artifacts[]` where each artifact is `{ path, mediaType, content }`
-- Stable sorting rules defined and unit-tested
+- [x] Stable sorting rules defined and unit-tested
 
-## MVP-2 — Evidence-first research module (Week 2–3)
+## MVP-2 — Evidence-first research module (Week 2–3) ✅ DONE
 Deliverables:
-- Provider-agnostic research interface:
+- [x] Provider-agnostic research interface:
   - input: query (+ optional domain allowlist)
   - output: `EvidenceItem[]`
-- Evidence bundle export:
+- [x] Evidence bundle export:
   - `evidence/evidence.json`
-- Hard gate:
+- [x] Hard gate:
   - major recommendations without evidence become validation **FAIL** until fixed
 
 ## MVP-3 — Document generator (Week 3–5)

@@ -2,8 +2,12 @@
 // Same ProjectSpec → identical MANIFEST.json hashes (deterministic)
 
 import type { Artifact, Manifest, ManifestEntry } from "@/types";
+import { stableJsonStringify } from "@/lib/utils/deterministic";
 
-export async function buildManifest(artifacts: Artifact[]): Promise<Manifest> {
+export async function buildManifest(
+  artifacts: Artifact[],
+  generatedAt?: string,
+): Promise<Manifest> {
   // Stable sort by path — determinism guarantee
   const sorted = [...artifacts].sort((a, b) => a.path.localeCompare(b.path));
 
@@ -22,7 +26,7 @@ export async function buildManifest(artifacts: Artifact[]): Promise<Manifest> {
   );
 
   return {
-    generated_at: new Date().toISOString(),
+    generated_at: generatedAt || new Date().toISOString(),
     algorithm: "sha256",
     entries,
   };
@@ -38,6 +42,6 @@ export function manifestToArtifact(manifest: Manifest): Artifact {
   return {
     path: "MANIFEST.json",
     mediaType: "application/json",
-    content: JSON.stringify(manifest, null, 2),
+    content: stableJsonStringify(manifest),
   };
 }

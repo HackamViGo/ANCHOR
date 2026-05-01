@@ -128,3 +128,18 @@ Deterministic ZIP export:
 - Determinism must be unit-tested and integration-tested.
 
 ---
+---
+
+## ADR-0009 — Data persistence: RAM (Secrets) vs IndexedDB (State)
+**Status:** Accepted  
+**Date:** 2026-05-01
+
+### Decision
+- **Secrets (API Keys)**: Held in RAM (Zustand state) only. Never persisted.
+- **Project State**: Auto-saved to IndexedDB (Dexie) with a 1-second debounce.
+- **Recovery**: On page load, the project is restored from Dexie, and the user is prompted to re-enter their API key.
+
+### Consequences
+- Prevents data loss during crashes/refreshes.
+- Maintains strict "No stored secrets" policy.
+- Minor UX friction (re-pasting key) is acceptable for security.

@@ -2,12 +2,17 @@ name: osv-scanner
 
 on:
   pull_request:
+    branches: [main]
   push:
     branches: [main]
 
 jobs:
   scan:
     runs-on: ubuntu-latest
+    permissions:
+      security-events: write # Нужни за качване на резултати в GitHub Security tab
+      contents: read
+    
     steps:
       - uses: actions/checkout@v4
       - uses: google/osv-scanner-action@

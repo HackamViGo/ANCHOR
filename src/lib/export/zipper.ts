@@ -1,6 +1,3 @@
-// ⚓ ANCHOR — Client-side ZIP export (JSZip)
-// Deterministic: stable sort, no random IDs, no fs mtimes
-
 import JSZip from "jszip";
 import type {
   Artifact,
@@ -11,6 +8,7 @@ import type {
 } from "@/types";
 import { buildManifest, manifestToArtifact } from "./manifest";
 import { buildZipFileName } from "@/lib/utils/sanitize";
+import { stableJsonStringify } from "@/lib/utils/deterministic";
 
 export interface ExportInput {
   projectName: string;
@@ -33,16 +31,17 @@ export async function buildZip(input: ExportInput): Promise<ExportResult> {
   );
 
   // 2. Add system artifacts (evidence, skills-lock, validation report)
+  // Use stableJsonStringify for all JSON artifacts
   const systemArtifacts: Artifact[] = [
     {
       path: "evidence/evidence.json",
       mediaType: "application/json",
-      content: JSON.stringify(input.evidenceBundle, null, 2),
+      content: stableJsonStringify(input.evidenceBundle),
     },
     {
       path: "skills-lock.json",
       mediaType: "application/json",
-      content: JSON.stringify(input.skillsLock, null, 2),
+      content: stableJsonStringify(input.skillsLock),
     },
     {
       path: "VALIDATION_REPORT.md",

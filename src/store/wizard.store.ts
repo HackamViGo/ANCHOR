@@ -257,4 +257,11 @@ export const selectError = (s: WizardState) => s.error;
 export const selectPhaseStatus = (phase: WizardPhase) => (s: WizardState) =>
   s.phaseStatuses[phase];
 
+export const selectProjectState = (s: WizardState) => ({
+  projectId: s.projectId,
+  projectSpec: s.projectSpec,
+  artifacts: s.artifacts,
+  evidenceBundle: s.evidenceBundle,
+});
+
 export const PHASE_ORDER_EXPORT = PHASE_ORDER;

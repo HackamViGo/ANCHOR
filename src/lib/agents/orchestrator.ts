@@ -7,8 +7,9 @@ import type {
   ProjectSpec,
 } from "@/types";
 
-const MODEL = process.env.NEXT_PUBLIC_GEMINI_PRO_MODEL ?? "gemini-2.5-pro";
+import { groundedSearch } from "../search/gemini-grounding";
 
+const MODEL = process.env.NEXT_PUBLIC_GEMINI_MODEL ?? "gemini-3.1-pro-preview";
 const GEMINI_BASE = "https://generativelanguage.googleapis.com/v1beta/models";
 
 // ─────────────────────────────────────────
@@ -21,6 +22,18 @@ export async function orchestrate(
   spec: Partial<ProjectSpec>,
 ): Promise<OrchestratorOutput> {
   const prompt = buildPhasePrompt(phase, spec);
+
+  // Use Deep Research for discovery and skills phases
+  const useResearch = phase === "discovery" || phase === "skills";
+  
+  if (useResearch) {
+    const { answer, evidence } = await groundedSearch(apiKey, prompt);
+    const parsed = parseOrchestratorResponse(answer);
+    return {
+      ...parsed,
+      evidence: [...parsed.evidence, ...evidence],
+    };
+  }
 
   const response = await callGemini(apiKey, MODEL, prompt);
   return parseOrchestratorResponse(response);

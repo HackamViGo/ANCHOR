@@ -49,3 +49,19 @@
 9. TESTING.md
 10. API_SPEC.md
 11. DEPLOYMENT.md
+
+---
+
+## 📁 Workspace Management
+- **temp/**: Local-only scratch directory for temporary assets, generated images, and experiment logs. 
+  - **Status**: Added to `.gitignore`.
+  - **Rule**: Content here is never committed. Can be purged at any time.
+
+---
+
+## 📈 Current Status (Audit 2026-05-01)
+- **MVP-0**: ✅ DONE
+- **MVP-1**: ✅ DONE (Unit tested)
+- **MVP-2**: ✅ DONE
+- **MVP-3**: 🔄 IN_PROGRESS (UI scaffolding)
+- **MVP-7**: 🔄 IN_PROGRESS (Logic verified, UI pending)

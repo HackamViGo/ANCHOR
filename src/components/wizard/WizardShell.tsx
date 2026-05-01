@@ -1,19 +1,23 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   useWizardStore,
   selectCurrentPhase,
   selectIsLoading,
   selectError,
+  selectProjectState,
 } from "@/store/wizard.store";
 import { SafariPersistBanner } from "./SafariPersistBanner";
 import { StepProgress } from "./StepProgress";
-import { isStoragePersisted, requestPersistentStorage } from "@/lib/db/dexie";
+import { isStoragePersisted, requestPersistentStorage, saveProject } from "@/lib/db/dexie";
+import type { ProjectSpec } from "@/types";
 
 // Phase components (scaffold — filled in per phase)
 import { LandingPhase } from "./phases/LandingPhase";
 import { DiscoveryPhase } from "./phases/DiscoveryPhase";
+import { DocumentationPhase } from "./phases/DocumentationPhase";
+import { EvidenceList } from "./EvidenceList";
 
 const PHASES = [
   "landing",
@@ -48,6 +52,31 @@ export function WizardShell() {
     initStorage();
   }, []);
 
+  // ⚓ ANCHOR — Auto-save logic
+  const projectState = useWizardStore(selectProjectState);
+  
+  useEffect(() => {
+    if (projectState.projectId && projectState.projectSpec.title) {
+      const timeout = setTimeout(async () => {
+        try {
+          await saveProject({
+            id: projectState.projectId as string,
+            spec: projectState.projectSpec as ProjectSpec, // Cast to complete spec for DB
+            phases: [], // To be populated with granular phase states
+            evidence: projectState.evidenceBundle,
+            artifacts: projectState.artifacts,
+            updated_at: new Date().toISOString(),
+          });
+          console.log("⚓ Project auto-saved to Dexie");
+        } catch (err) {
+          console.error("Failed to auto-save project:", err);
+        }
+      }, 1000); // Debounce save
+      
+      return () => clearTimeout(timeout);
+    }
+  }, [projectState]);
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Safari IndexedDB eviction warning */}
@@ -75,11 +104,13 @@ export function WizardShell() {
         {/* Phase routing */}
         {currentPhase === "landing" && <LandingPhase />}
         {currentPhase === "discovery" && <DiscoveryPhase />}
+        {currentPhase === "documentation" && <DocumentationPhase />}
         {/* Additional phases added per roadmap */}
+
+        <EvidenceList />
       </main>
     </div>
   );
 }
 
-// Missing import — add at top
-import { useState } from "react";
+

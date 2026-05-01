@@ -22,3 +22,4 @@ scratch/
 
 .agents/cache
 .agents/tmp
+temp/

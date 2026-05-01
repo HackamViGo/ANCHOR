@@ -15,6 +15,8 @@ export default [
       "coverage/**",
       "exports/**",
       "scratch/**",
+      ".agents/**",
+      "temp/**",
     ],
   },
   js.configs.recommended,
