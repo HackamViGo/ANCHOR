@@ -158,7 +158,7 @@ export function buildSymlinkScripts(): Artifact[] {
 
 set -e
 
-ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT="$(cd "$(dirname "\${BASH_SOURCE[0]}")" && pwd)"
 
 echo "⚓ Setting up ANCHOR agent symlinks..."
 

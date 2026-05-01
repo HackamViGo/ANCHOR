@@ -253,6 +253,7 @@ export const selectSkillCandidates = (s: WizardState) => s.skillCandidates;
 export const selectSkillsLock = (s: WizardState) => s.skillsLock;
 export const selectValidationReport = (s: WizardState) => s.validationReport;
 export const selectIsLoading = (s: WizardState) => s.isLoading;
+export const selectError = (s: WizardState) => s.error;
 export const selectPhaseStatus = (phase: WizardPhase) => (s: WizardState) =>
   s.phaseStatuses[phase];
 

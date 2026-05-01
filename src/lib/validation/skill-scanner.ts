@@ -148,6 +148,15 @@ function hasAgentsConflict(content: string): boolean {
   return AGENTS_CONFLICT_PATTERNS.some((pattern) => pattern.test(content));
 }
 
+export type RiskLevel = "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
+
+export function getRiskLevel(warnings: RiskFlag[]): RiskLevel {
+  if (warnings.includes("HIDDEN_PAYLOAD")) return "CRITICAL";
+  if (warnings.includes("HIDDEN_UNICODE")) return "HIGH";
+  if (warnings.includes("PROMPT_INJECTION")) return "MEDIUM";
+  return "LOW";
+}
+
 // ─────────────────────────────────────────
 // Frontmatter parser (minimal, no dependencies)
 // ─────────────────────────────────────────
