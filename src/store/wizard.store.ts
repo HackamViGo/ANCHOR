@@ -10,6 +10,7 @@ import type {
   ProjectSpec,
   SkillCandidate,
   SkillLockEntry,
+  StoredProject,
   ValidationReport,
   WizardPhase,
   WizardPhaseStatus,
@@ -80,8 +81,9 @@ interface WizardActions {
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
 
-  // Reset
+  // Reset & Restore
   reset: () => void;
+  restoreProject: (project: StoredProject) => void;
 }
 
 // ─────────────────────────────────────────
@@ -216,7 +218,7 @@ export const useWizardStore = create<WizardState & WizardActions>()(
       setLoading: (isLoading) => set({ isLoading }),
       setError: (error) => set({ error }),
 
-      // ── Reset ────────────────────────────
+      // ── Reset & Restore ──────────────────
       reset: () =>
         set({
           apiKey: null,
@@ -234,6 +236,19 @@ export const useWizardStore = create<WizardState & WizardActions>()(
           validationReport: null,
           isLoading: false,
           error: null,
+        }),
+
+      restoreProject: (project) =>
+        set({
+          projectId: project.id,
+          projectSpec: project.spec,
+          artifacts: project.artifacts || [],
+          evidenceBundle: project.evidence || {
+            generated_at: new Date().toISOString(),
+            items: [],
+          },
+          // If we have a spec, we can jump to discovery
+          currentPhase: "discovery",
         }),
     }),
     { name: "anchor-wizard" },
