@@ -28,7 +28,7 @@ If any file conflicts with a higher-precedence instruction, raise a conflict in 
 - **PR-First Policy**: All changes must be merged via Pull Request after CI passes.
 - **Asset Isolation**: ALL generated images, scratch files, and temporary artifacts MUST be stored in the `temp/` directory. This directory is git-ignored and used for development-only visual aids.
 - **Timestamp Accountability**: Every documentation file (`.md`) MUST end with a "Last Modified: ISO-TIMESTAMP" footer.
-- **Memory-First Orientation**: The agent MUST use `temp/memory_graph.json` to store and retrieve "fine-grained" reasoning and project state before taking major actions.
+- **Memory-First Orientation**: The agent MUST use `.anchor/memory/graph.json` and its manager `.anchor/memory/manager.py` to store and retrieve "fine-grained" reasoning and project state before taking major actions.
 - **React2Shell Safety**: NEVER alter the React version in `package.json`. Downgrading below 19.4.0 (specifically 19.0.0/19.2.0) triggers a CVSS 10.0 RCE vulnerability.
 - **Next.js 16.2 Routing**: NEVER create `middleware.ts`. All routing/proxy logic MUST live in `proxy.ts`.
 - **Tailwind v4 Config**: NEVER create `tailwind.config.js`. All configuration MUST be in `globals.css` via `@theme`.

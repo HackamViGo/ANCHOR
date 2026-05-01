@@ -23,3 +23,6 @@ scratch/
 .agents/cache
 .agents/tmp
 temp/
+
+# Agent Knowledge & Memory
+.anchor/

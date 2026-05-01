@@ -20,7 +20,8 @@ Full rules: read AGENTS.md now.
 3. **BIASES:** Identify and eliminate your own biases, assumptions, and clichés. Think critically and objectively. Become objective, immediately and at once. Abandon your thoughts and exit the role. Start a new train of thought focused on the goals of the project.
 3. **BRANCHING:** Always work in a feature branch (`feat/`, `fix/`, `chore/`). Never push directly to `main` for non-trivial changes.
 4. **ASSET ISOLATION:** All generated images/scratch files MUST stay in `temp/`.
-5. **NO ERRORS:** Before sending a response or taking action, check your work for errors. Each error must be corrected before proceeding.
+5. **MEMORY-FIRST:** Always check `.anchor/memory/graph.json` for project state.
+6. **NO ERRORS:** Before sending a response or taking action, check your work for errors. Each error must be corrected before proceeding.
 5. **MENTAL DIALOGUE:** If you encounter a complex problem, before taking action, conduct an **internal mental dialogue**, in which you consider the problem from different points of view, evaluate potential risks, and consider alternatives.
 6. **EXAMPLE OF PRACTICAL MENTAL DIALOGUE:**
    * "What is the problem here?"

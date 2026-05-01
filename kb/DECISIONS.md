@@ -146,4 +146,21 @@ Deterministic ZIP export:
 
 
 ---
-Last Modified: 2026-05-01T23:23:41+03:00
+
+## ADR-0010 — AnchorMemory: Local-First Agentic Knowledge Graph
+**Status:** Accepted  
+**Date:** 2026-05-01
+
+### Decision
+- **Structure**: Implement a Modular Property Graph using a local JSON file (`.anchor/memory/graph.json`).
+- **Management**: A dedicated Python script (`.anchor/memory/manager.py`) handles all CRUD operations.
+- **Reasoning**: Every entry MUST include a `reasoning` field to capture the "why" behind agent actions.
+- **Privacy**: The entire `.anchor/` directory is git-ignored to ensure developer/agent privacy.
+
+### Consequences
+- Enables high-fidelity memory across different agent sessions (Claude, Gemini, etc.).
+- Eliminates the need for cloud-based memory services.
+- Requires manual/automated maintenance to prevent graph bloat.
+
+---
+Last Modified: 2026-05-01T23:48:06+03:00
