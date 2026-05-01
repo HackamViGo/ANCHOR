@@ -25,4 +25,5 @@ scratch/
 temp/
 
 # Agent Knowledge & Memory
-.anchor/
+.anchor/memory/graph.json
+! .anchor/memory/manager.py
