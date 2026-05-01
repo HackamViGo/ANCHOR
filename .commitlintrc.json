@@ -1,0 +1,24 @@
+{
+  "extends": [
+    "@commitlint/config-conventional"
+  ],
+  "rules": {
+    "scope-enum": [
+      2,
+      "always",
+      [
+        "app",
+        "wizard",
+        "spec",
+        "evidence",
+        "skills",
+        "export",
+        "ci",
+        "docs",
+        "kb",
+        "security",
+        "deps"
+      ]
+    ]
+  }
+}

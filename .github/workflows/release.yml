@@ -1,0 +1,11 @@
+name: release
+
+on:
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "Phase 1: add automated releases (release-please or similar)."

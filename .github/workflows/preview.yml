@@ -1,0 +1,10 @@
+name: preview
+
+on:
+  pull_request:
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Use Vercel Preview Deployments via Vercel Git integration or add Vercel secrets to automate."

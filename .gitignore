@@ -1,0 +1,24 @@
+node_modules
+.next
+dist
+out
+coverage
+
+.env
+.env.local
+.env.\*.local
+
+\*.log
+.DS_Store
+темп.md
+*.tsbuildinfo
+
+exports/
+scratch/
+
+# Keep canonical skills tracked:
+
+# DO NOT ignore .agents/skills
+
+.agents/cache
+.agents/tmp
