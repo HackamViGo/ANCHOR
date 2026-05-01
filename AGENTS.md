@@ -4,6 +4,36 @@ This file is written for autonomous coding agents contributing to ANCHOR and for
 
 ---
 
+## Code Quality
+- ESLint + Prettier are pre-configured — do not modify settings
+- Keep functions under 30 lines
+- Keep files under 300 lines — split if larger
+- Cyclomatic complexity must stay under 10
+- No console.log in production code — use a logger
+
+## Security
+- Store all secrets in .env.local (.env) — never hardcode credentials
+- Never log API keys or tokens
+- Validate all user input before processing
+
+## Testing Requirements
+- Write unit tests for every new utility function
+- Integration tests for API endpoints
+- Minimum 80% coverage on new code
+
+---
+
+## Workflow Principles (The ROI Rule)
+- **Don't Automate Rare Tasks**: If it's done once a year manually, don't build a script.
+- **No Judgment Calls**: Automation is for processes, not human "feel" or complex choices.
+- **Unstable Processes = No**: If inputs are unpredictable, automation produces "slop".
+- **Simplicity First**: Limit automation steps to **5 branch points** or fewer.
+- **ROI is King**: If maintenance takes longer than the time saved, delete it.
+- **Avoid Micro-automation**: Manual effort is better for tasks done very few times per day.
+- **Rule of Thumb**: Automate only **Frequent**, **High-Risk**, or **Consistency-Critical** tasks.
+
+---
+
 
 ## 0) Prime directive
 - Do not guess versions, APIs, or file locations.
@@ -118,8 +148,4 @@ For any change:
 
 
 ---
-Last Modified: 2026-05-01T23:23:41+03:00
-
-
----
-Last Modified: 2026-05-01T23:23:41+03:00
+Last Modified: 2026-05-02T01:08:07+03:00
