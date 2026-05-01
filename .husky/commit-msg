@@ -1,4 +1,5 @@
 #!/usr/bin/env sh
+. /home/hackamvigo/.nvm/nvm.sh && nvm use 24 --silent
 . "$(dirname -- "$0")/_/husky.sh"
 
 set -e

@@ -1,97 +1,51 @@
-# PROJECT_CONTEXT (Canonical) — ANCHOR
+# PROJECT_CONTEXT — ANCHOR (2026)
 
-**Validated on:** 2026-04-30
+## Identity
+- **Project Name**: ANCHOR
+- **Slogan**: AI Needs Clear Human-defined Organization & Rules
+- **Core Value**: Stop the drift. Give your AI a place to stand.
 
-This file is the canonical source of truth for:
-- pinned toolchain versions
-- non-negotiable invariants
-- determinism rules
-- evidence-first requirements
+## Technical Stack (Pinned)
+- **Framework**: Next.js 16.2.0 (App Router, Proxy-based routing)
+- **Language**: TypeScript 5.7+
+- **Package Manager**: pnpm 11.0.0 (Strict subdeps mode)
+- **Styling**: Tailwind v4.0.0 (CSS-only configuration via @theme)
+- **Database**: Dexie.js (IndexedDB for local-first persistence)
+- **Runtime**: Node.js 24.15.0 (pinned via .nvmrc)
 
----
+## Critical Constraints (2026 "Gotchas")
+- **React2Shell Protection**: NEVER alter the React version in `package.json`. Project MUST stay on React >= 19.4.0 to avoid CVSS 10.0 RCE.
+- **Routing**: `middleware.ts` is DEPRECATED in Next.js 16.2. All proxy/routing logic must live in `src/lib/proxy.ts` or similar.
+- **Config**: `tailwind.config.js` is IGNORED by Tailwind v4. All config MUST be in `src/app/globals.css`.
+- **Security**: Evidence-first (HARD GATE) + BYOK (no stored secrets).
 
-## Pinned toolchain (ANCHOR baseline)
+## Non-negotiable Invariants
 
-Runtime:
-- Node.js: 24.14.1 (LTS)
-
-Web framework:
-- Next.js: 16.2.4
-- React: 19.2.5
-- TypeScript: 6.0.3
-
-Quality:
-- ESLint: 10.2.1
-- typescript-eslint: 8.59.1
-- Prettier: 3.8.3
-
-Testing:
-- Vitest: 4.1.5
-
-Git guardrails:
-- Husky: 9.1.7
-- lint-staged: 16.4.0
-- commitlint: 20.5.3
-
-Package manager:
-- pnpm: 11.0.0
-
----
-
-## Non-negotiable invariants
-
-1) Evidence-first (hard gate)
+### 1) Evidence-first (hard gate)
 - Every major recommendation MUST have an EvidenceItem:
   `{ url, accessed_at, snippet <= 25 words }`
 - Evidence is exported as: `evidence/evidence.json`
 
-2) Skills are untrusted
-- `allowed-tools: shell/bash` is a BLOCKER unless explicitly opted-in and pinned.
-- Unicode/base64/injection scans are WARNINGS in MVP.
+### 2) Deterministic Generation
+- All output paths stable-sorted.
+- SHA-256 computed per file.
+- `MANIFEST.json` required in exports.
 
-3) Deterministic export
-- Stable sort everything.
-- SHA-256 hash every exported file.
-- Always include `VALIDATION_REPORT.md` and `MANIFEST.json`.
-
-4) BYOK secrets
-- BYOK Gemini key is memory-only by default.
-- Never persisted to IndexedDB/localStorage.
-- Never included in exported ZIP.
+### 3) BYOK Secret Handling
+- No secrets in `localStorage`, `IndexedDB`, or exported ZIP.
+- API keys (Gemini, etc.) provided at runtime by the user (BYOK).
 
 ---
 
-## Framework/tool constraints (operational)
-
-Next.js 16 constraints:
-- Minimum Node version: 20.9.0+
-- `next lint` is removed; lint runs via ESLint CLI (or an alternative like Biome if chosen later)
-
-pnpm 11 constraints:
-- pnpm 11 changes defaults and config behavior; avoid assumptions from older pnpm configs.
-- Prefer explicit configuration and pinned versions in CI (Corepack).
-
----
-
-## Data privacy baseline (MVP)
-
-- Local-first drafts in browser storage (IndexedDB).
-- Client-side ZIP export by default.
-- No prompt logging by default.
-
----
-
-## Verification sources (URLs)
-
-- Node releases: https://github.com/nodejs/node/releases
-- Next.js releases: https://github.com/vercel/next.js/releases
-- React releases: https://github.com/facebook/react/releases
-- TypeScript releases: https://github.com/microsoft/TypeScript/releases
-- ESLint release notes: https://eslint.org/blog/
-- typescript-eslint releases: https://github.com/typescript-eslint/typescript-eslint/releases
-- Prettier releases: https://github.com/prettier/prettier/releases
-- Vitest: https://vitest.dev/
-- pnpm releases: https://github.com/pnpm/pnpm/releases
-- commitlint CLI docs: https://commitlint.js.org/
-
-Pinned version existence cross-checks were verified against official release pages for Next.js, React, TypeScript, Prettier, and typescript-eslint.
+## 📄 Manifest of Artifacts (Base Pack)
+1. README.md
+2. ROADMAP.md
+3. ARCHITECTURE.md
+4. GEMINI.md
+5. AGENTS.md
+6. PROJECT_CONTEXT.md
+7. DECISIONS.md
+8. SECURITY.md
+9. TESTING.md
+10. API_SPEC.md
+11. DEPLOYMENT.md

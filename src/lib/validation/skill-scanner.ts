@@ -1,64 +1,117 @@
 /* eslint-disable no-misleading-character-class */
-import { ProjectSpec, ValidationFinding, SkillLockEntry } from "../../types";
+// ⚓ ANCHOR — Hybrid Skill Security Scanner
+// GATE:     shell/bash in allowed-tools → BLOCKED (hard)
+// WARNINGS: base64, hidden unicode, prompt injection, AGENTS.md conflicts
 
-/**
- * Skill Scanner Logic
- * 
- * Performs:
- * 1. Policy checks (shell/bash allowed-tools)
- * 2. Deep scans (unicode, base64, injection patterns)
- */
+import type { RiskFlag } from "@/types";
 
-export async function scanSkills(
-  skills: SkillLockEntry[],
-  _spec: ProjectSpec
-): Promise<ValidationFinding[]> {
-  const findings: ValidationFinding[] = [];
-
-  for (const skill of skills) {
-    // Policy Check: allowed-tools
-    if (skill.risk_flags.includes("HAS_SHELL_TOOLS")) {
-      findings.push({
-        id: `SKILL_POLICY_${skill.skill_name}`,
-        severity: "BLOCKER",
-        area: "Security",
-        message: `Skill "${skill.skill_name}" uses shell/bash tools. This requires explicit user opt-in and pinning.`,
-        resolution_options: [
-          { option: "Opt-in and pin skill", effort: "LOW" },
-          { option: "Remove skill", effort: "LOW" }
-        ]
-      });
-    }
-
-    // Deep Scans (Mock logic for MVP)
-    // In a real implementation, we would fetch the SKILL.md content here.
-    // For MVP, we assume the content is provided or skip if not available.
-  }
-
-  return findings;
+export interface ScanResult {
+  blocked: boolean;
+  blockReason: string | null;
+  warnings: RiskFlag[];
+  warningDetails: string[];
 }
 
-/**
- * Utility functions for deep scanning
- */
+// ─────────────────────────────────────────
+// Main scanner
+// ─────────────────────────────────────────
+
+export function scanSkillContent(content: string): ScanResult {
+  const warnings: RiskFlag[] = [];
+  const warningDetails: string[] = [];
+
+  // ── GATE — shell/bash in allowed-tools ──
+  const shellGateResult = checkShellGate(content);
+  if (shellGateResult.blocked) {
+    return {
+      blocked: true,
+      blockReason: shellGateResult.reason,
+      warnings: [],
+      warningDetails: [],
+    };
+  }
+
+  // ── WARNING — Base64 blocks ──────────────
+  if (hasBase64Blocks(content)) {
+    warnings.push("HIDDEN_PAYLOAD");
+    warningDetails.push(
+      "Base64-encoded block detected — possible hidden payload",
+    );
+  }
+
+  // ── WARNING — Hidden unicode ─────────────
+  const unicodeMatches = findHiddenUnicode(content);
+  if (unicodeMatches.length > 0) {
+    warnings.push("HIDDEN_UNICODE");
+    warningDetails.push(
+      `Hidden unicode characters detected at positions: ${unicodeMatches.join(", ")}`,
+    );
+  }
+
+  // ── WARNING — Prompt injection patterns ──
+  if (hasPromptInjection(content)) {
+    warnings.push("PROMPT_INJECTION");
+    warningDetails.push("Potential prompt injection pattern detected");
+  }
+
+  // ── WARNING — AGENTS.md instruction conflicts ──
+  if (hasAgentsConflict(content)) {
+    warnings.push("INSTRUCTION_CONFLICT");
+    warningDetails.push(
+      "Content may conflict with AGENTS.md conventions (e.g. contradicts shell policy)",
+    );
+  }
+
+  return {
+    blocked: false,
+    blockReason: null,
+    warnings,
+    warningDetails,
+  };
+}
+
+// ─────────────────────────────────────────
+// Individual checks
+// ─────────────────────────────────────────
+
+function checkShellGate(content: string): { blocked: boolean; reason: string } {
+  // Check YAML frontmatter for allowed-tools: shell or bash
+  const frontmatterMatch = content.match(/^---[\s\S]*?---/);
+  if (!frontmatterMatch) {
+    return { blocked: false, reason: "" };
+  }
+
+  const frontmatter = frontmatterMatch[0];
+  const shellPattern =
+    /allowed-tools\s*:.*\b(shell|bash|sh|zsh|fish|cmd|powershell)\b/i;
+
+  if (shellPattern.test(frontmatter)) {
+    return {
+      blocked: true,
+      reason:
+        "SKILL.md requests shell/bash in allowed-tools. " +
+        "This is blocked by ANCHOR policy. " +
+        "User must explicitly opt in and skill must be pinned and reviewed.",
+    };
+  }
+
+  return { blocked: false, reason: "" };
+}
 
 // Base64 blocks: 40+ chars of base64 alphabet
 const BASE64_REGEX = /[A-Za-z0-9+/]{40,}={0,2}/g;
 
-export function hasBase64Blocks(content: string): boolean {
+function hasBase64Blocks(content: string): boolean {
   // Reset lastIndex before testing
   BASE64_REGEX.lastIndex = 0;
   return BASE64_REGEX.test(content);
 }
 
 // Hidden unicode: Cf (format), Mn (non-spacing marks), direction overrides
-// Using new RegExp to avoid linting issues with control characters in literal classes
-const HIDDEN_UNICODE_REGEX = new RegExp(
-  "[\\u00AD\\u034F\\u061C\\u115F\\u1160\\u17B4\\u17B5\\u180B-\\u180D\\u200B-\\u200F\\u202A-\\u202E\\u2060-\\u2064\\u206A-\\u206F\\uFEFF\\uFFF0-\\uFFF8]",
-  "g"
-);
+const HIDDEN_UNICODE_REGEX =
+  /[\u00AD\u034F\u061C\u115F\u1160\u17B4\u17B5\u180B-\u180D\u200B-\u200F\u202A-\u202E\u2060-\u2064\u206A-\u206F\uFEFF\uFFF0-\uFFF8]/g;
 
-export function findHiddenUnicode(content: string): number[] {
+function findHiddenUnicode(content: string): number[] {
   const positions: number[] = [];
   let match: RegExpExecArray | null;
   HIDDEN_UNICODE_REGEX.lastIndex = 0;
@@ -68,20 +121,58 @@ export function findHiddenUnicode(content: string): number[] {
   return positions;
 }
 
-// Prompt Injection Patterns: Common patterns used to override system instructions
+// Prompt injection indicators
 const INJECTION_PATTERNS = [
-  /ignore (all )?previous instructions/i,
-  /system override/i,
-  /you are now/i,
-  /new rule:/i
+  /ignore\s+(all\s+)?(previous|above|prior)\s+instructions?/i,
+  /disregard\s+(all\s+)?(previous|above|prior)\s+instructions?/i,
+  /you\s+are\s+now\s+a/i,
+  /new\s+instructions?\s*:/i,
+  /system\s*:\s*you\s+must/i,
+  /\[INST\]/i,
+  /<\|im_start\|>/i,
 ];
 
-export function findInjectionPatterns(content: string): string[] {
-  const patterns: string[] = [];
-  for (const regex of INJECTION_PATTERNS) {
-    if (regex.test(content)) {
-      patterns.push(regex.source);
-    }
-  }
-  return patterns;
+function hasPromptInjection(content: string): boolean {
+  return INJECTION_PATTERNS.some((pattern) => pattern.test(content));
+}
+
+// AGENTS.md conflicts — things that contradict our policy
+const AGENTS_CONFLICT_PATTERNS = [
+  /allowed-tools\s*:.*shell/i,
+  /run\s+as\s+root/i,
+  /disable\s+security/i,
+  /skip\s+validation/i,
+];
+
+function hasAgentsConflict(content: string): boolean {
+  return AGENTS_CONFLICT_PATTERNS.some((pattern) => pattern.test(content));
+}
+
+// ─────────────────────────────────────────
+// Frontmatter parser (minimal, no dependencies)
+// ─────────────────────────────────────────
+
+export interface SkillFrontmatter {
+  name?: string;
+  description?: string;
+  "allowed-tools"?: string[];
+  metadata?: Record<string, unknown>;
+}
+
+export function parseSkillFrontmatter(content: string): SkillFrontmatter {
+  const match = content.match(/^---\n([\s\S]*?)\n---/);
+  if (!match) return {};
+
+  const yaml = match[1];
+  const result: SkillFrontmatter = {};
+
+  // Minimal YAML key extraction (no external deps)
+  const nameMatch = yaml.match(/^name\s*:\s*(.+)$/m);
+  if (nameMatch) result.name = nameMatch[1].trim().replace(/^["']|["']$/g, "");
+
+  const descMatch = yaml.match(/^description\s*:\s*(.+)$/m);
+  if (descMatch)
+    result.description = descMatch[1].trim().replace(/^["']|["']$/g, "");
+
+  return result;
 }
