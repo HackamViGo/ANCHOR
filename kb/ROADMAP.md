@@ -174,3 +174,7 @@ Goal: community + marketplace + enterprise readiness.
 | Date | Action |
 |---|---|
 | 2026-06-17 | Monitor `ai.google.dev` for updated stable Gemini model IDs; update `.env.example` and pinned config before non-versioned aliases are deprecated (tracked in DECISIONS.md). |
+
+
+---
+Last Modified: 2026-05-01T23:23:41+03:00

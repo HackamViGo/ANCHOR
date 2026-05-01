@@ -26,6 +26,9 @@ If any file conflicts with a higher-precedence instruction, raise a conflict in 
 ### 2.5 Critical 2026 Invariants (NO DRIFT)
 - **Branch-based Workflow**: NEVER push directly to `main` for new features or complex fixes. Use branches: `feat/` for features, `fix/` for bugs, `chore/` for maintenance.
 - **PR-First Policy**: All changes must be merged via Pull Request after CI passes.
+- **Asset Isolation**: ALL generated images, scratch files, and temporary artifacts MUST be stored in the `temp/` directory. This directory is git-ignored and used for development-only visual aids.
+- **Timestamp Accountability**: Every documentation file (`.md`) MUST end with a "Last Modified: ISO-TIMESTAMP" footer.
+- **Memory-First Orientation**: The agent MUST use `temp/memory_graph.json` to store and retrieve "fine-grained" reasoning and project state before taking major actions.
 - **React2Shell Safety**: NEVER alter the React version in `package.json`. Downgrading below 19.4.0 (specifically 19.0.0/19.2.0) triggers a CVSS 10.0 RCE vulnerability.
 - **Next.js 16.2 Routing**: NEVER create `middleware.ts`. All routing/proxy logic MUST live in `proxy.ts`.
 - **Tailwind v4 Config**: NEVER create `tailwind.config.js`. All configuration MUST be in `globals.css` via `@theme`.
@@ -112,3 +115,11 @@ For any change:
 - GEMINI.md is intentionally minimal and MUST NOT duplicate policy.
 - Policy lives here (AGENTS.md).
 - (Planned) a symlink helper script will point Claude/Cursor/Copilot instructions to AGENTS.md to prevent drift.
+
+
+---
+Last Modified: 2026-05-01T23:23:41+03:00
+
+
+---
+Last Modified: 2026-05-01T23:23:41+03:00

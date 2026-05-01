@@ -53,3 +53,7 @@ ANCHOR’s tests exist to prevent broken exports, enforce safety policies, and g
   - repeated exports
   - different machines (line endings normalized)
 - No filesystem metadata (mtime) affects hashes
+
+
+---
+Last Modified: 2026-05-01T23:23:41+03:00

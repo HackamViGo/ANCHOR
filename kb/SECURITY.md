@@ -78,3 +78,7 @@ The exported ZIP must include:
 - evidence/evidence.json
 - skills-lock.json
 - MANIFEST.json
+
+
+---
+Last Modified: 2026-05-01T23:23:41+03:00

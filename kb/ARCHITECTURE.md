@@ -130,3 +130,7 @@ Validation categories:
 - `GEMINI.md` is intentionally minimal: it defines read order and points to `AGENTS.md`.
 - `AGENTS.md` contains the full policy surface area.
 - (Planned) a symlink helper script will map `CLAUDE.md`, Copilot instructions, and Cursor rules to `AGENTS.md`.
+
+
+---
+Last Modified: 2026-05-01T23:23:41+03:00

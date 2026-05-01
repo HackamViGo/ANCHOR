@@ -83,3 +83,7 @@ The exported ZIP (for a user project) will include at minimum:
 - `MANIFEST.json` (sha256 hashes for every exported file)
 
 (Generation for `.husky/` and `.github/workflows/` is planned in MVP scope and appears in `ROADMAP.md`.)
+
+
+---
+Last Modified: 2026-05-01T23:23:41+03:00

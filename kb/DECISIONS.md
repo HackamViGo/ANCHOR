@@ -143,3 +143,7 @@ Deterministic ZIP export:
 - Prevents data loss during crashes/refreshes.
 - Maintains strict "No stored secrets" policy.
 - Minor UX friction (re-pasting key) is acceptable for security.
+
+
+---
+Last Modified: 2026-05-01T23:23:41+03:00

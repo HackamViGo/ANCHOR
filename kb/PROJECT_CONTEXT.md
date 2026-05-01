@@ -11,6 +11,7 @@
 - **Package Manager**: pnpm 11.0.0 (Strict subdeps mode)
 - **Styling**: Tailwind v4.0.0 (CSS-only configuration via @theme)
 - **Database**: Dexie.js (IndexedDB for local-first persistence)
+- **Knowledge Management**: AnchorMemory (Local JSON-based modular property graph)
 - **Runtime**: Node.js 24.15.0 (pinned via .nvmrc)
 
 ## Critical Constraints (2026 "Gotchas")
@@ -65,3 +66,7 @@
 - **MVP-2**: ✅ DONE
 - **MVP-3**: 🔄 IN_PROGRESS (UI scaffolding)
 - **MVP-7**: 🔄 IN_PROGRESS (Logic verified, UI pending)
+
+
+---
+Last Modified: 2026-05-01T23:23:41+03:00

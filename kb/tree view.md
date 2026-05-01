@@ -72,3 +72,7 @@ ANCHOR/
 - Ensure `pnpm install` and `pnpm prepare` are run to activate Husky.
 - Deterministic ZIP auditing via `MANIFEST.json` is a hard requirement.
 - Always include `VALIDATION_REPORT.md` in exports.
+
+
+---
+Last Modified: 2026-05-01T23:23:41+03:00

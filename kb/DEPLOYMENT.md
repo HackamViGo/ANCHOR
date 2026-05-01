@@ -31,3 +31,7 @@ Optional (Phase 1+ server-mode only; never exposed to client builds):
 - Default: no prompt logging
 - Never log API keys
 - If server-mode is enabled later, ensure request logs do not contain prompts or secrets by default
+
+
+---
+Last Modified: 2026-05-01T23:23:41+03:00
