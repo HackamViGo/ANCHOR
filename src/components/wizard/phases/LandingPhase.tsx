@@ -3,6 +3,9 @@ import { useWizardStore } from "@/store/wizard.store";
 import { validateGeminiKey } from "@/lib/utils/sanitize";
 import { listProjects, deleteProject } from "@/lib/db/dexie";
 import type { StoredProject } from "@/types";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 
 export function LandingPhase() {
   const [key, setKey] = useState("");
@@ -65,20 +68,19 @@ export function LandingPhase() {
 
       <div className="grid w-full max-w-5xl gap-12 lg:grid-cols-2">
         {/* Left Side: New Project */}
-        <div className="flex flex-col gap-8 rounded-2xl border border-border bg-card/50 p-8 shadow-sm">
-          <div className="text-left">
-            <h2 className="text-xl font-semibold">New Project</h2>
-            <p className="text-sm text-muted-foreground">
+        <Card className="bg-card/50">
+          <CardHeader className="text-left px-8 pt-8">
+            <CardTitle className="text-xl">New Project</CardTitle>
+            <CardDescription>
               Bring your idea and your Gemini key. We'll build the rest.
-            </p>
-          </div>
-
-          <div className="space-y-4 text-left">
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4 text-left px-8 pb-8">
             <div className="space-y-2">
               <label htmlFor="gemini-key" className="text-sm font-medium">
                 Your Gemini API Key
               </label>
-              <input
+              <Input
                 id="gemini-key"
                 type="password"
                 value={key}
@@ -87,7 +89,7 @@ export function LandingPhase() {
                   setKeyError(null);
                 }}
                 placeholder="AIza..."
-                className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-primary"
+                className="font-mono"
                 autoComplete="off"
               />
               {keyError && <p className="text-xs text-destructive">{keyError}</p>}
@@ -101,33 +103,32 @@ export function LandingPhase() {
               </a>
             </p>
 
-            <button
+            <Button
               type="button"
               onClick={handleStart}
               disabled={!key.trim()}
-              className="w-full rounded-lg bg-primary px-4 py-3 font-semibold text-primary-foreground transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-40"
+              className="w-full h-12"
             >
               Start Building →
-            </button>
-          </div>
-        </div>
+            </Button>
+          </CardContent>
+        </Card>
 
         {/* Right Side: Recent Drafts */}
-        <div className="flex flex-col gap-8 rounded-2xl border border-border bg-card/50 p-8 shadow-sm">
-          <div className="text-left">
-            <h2 className="text-xl font-semibold">Recent Drafts</h2>
-            <p className="text-sm text-muted-foreground">
+        <Card className="bg-card/50">
+          <CardHeader className="text-left px-8 pt-8">
+            <CardTitle className="text-xl">Recent Drafts</CardTitle>
+            <CardDescription>
               Continue where you left off.
-            </p>
-          </div>
-
-          <div className="flex flex-col gap-3">
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-3 px-8 pb-8">
             {recentProjects.length > 0 ? (
               recentProjects.slice(0, 4).map((p) => (
                 <button
                   key={p.id}
                   onClick={() => handleResume(p)}
-                  className="group flex items-center justify-between rounded-xl border border-border bg-background/50 p-4 text-left transition-all hover:border-primary/50 hover:bg-background"
+                  className="group flex items-center justify-between border border-border bg-background/50 p-4 text-left transition-all hover:border-primary/50 hover:bg-background"
                 >
                   <div className="overflow-hidden">
                     <h3 className="truncate font-medium text-sm">
@@ -142,7 +143,7 @@ export function LandingPhase() {
                     <span
                       role="button"
                       onClick={(e) => handleDelete(p.id, e)}
-                      className="rounded-md p-1.5 hover:bg-destructive/10 hover:text-destructive"
+                      className="p-1.5 hover:bg-destructive/10 hover:text-destructive"
                       title="Delete draft"
                     >
                       🗑️
@@ -151,7 +152,7 @@ export function LandingPhase() {
                 </button>
               ))
             ) : (
-              <div className="flex h-32 flex-col items-center justify-center rounded-xl border border-dashed border-border text-muted-foreground">
+              <div className="flex h-32 flex-col items-center justify-center border border-dashed border-border text-muted-foreground">
                 <p className="text-xs italic">No recent drafts found.</p>
               </div>
             )}
@@ -161,8 +162,8 @@ export function LandingPhase() {
                 Showing latest 4 of {recentProjects.length} drafts
               </p>
             )}
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Feature highlights */}
@@ -175,7 +176,7 @@ export function LandingPhase() {
           { icon: "🗜️", label: "ZIP", desc: "Portable" },
           { icon: "✅", label: "Deterministic", desc: "Stable" },
         ].map((f) => (
-          <div key={f.label} className="flex flex-col items-center rounded-xl border border-border p-3 text-center transition-colors hover:bg-card">
+          <div key={f.label} className="flex flex-col items-center border border-border p-3 text-center transition-colors hover:bg-card">
             <span className="text-xl mb-1">{f.icon}</span>
             <strong className="text-[10px] font-bold block">{f.label}</strong>
             <p className="text-[10px] text-muted-foreground">{f.desc}</p>

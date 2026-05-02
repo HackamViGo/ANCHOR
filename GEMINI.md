@@ -31,7 +31,13 @@ Full rules: read AGENTS.md now.
    * "How to avoid them?"
    * "Am I ready to act?"
    * "Let's act!"
-7. **DOCUMENTATION OF THOUGHTS:** When you conduct a mental dialogue, always record your reasoning in a separate file. .gemini/things.md 
+7. **DOCUMENTATION OF THOUGHTS:** When you conduct a mental dialogue, always record your reasoning in a separate file. .gemini/things.md
+
+## ⚠️ AGENTS.md has two domains — know which applies to you:
+- **Domain A** = rules for YOU (coding agent working on ANCHOR codebase)
+- **Domain B** = rules for agents *inside exported projects* (app product invariants)
+
+When implementing a module, check which Domain B section applies to that module.
 
 ---
-Last Modified: 2026-05-02T01:08:07+03:00
+Last Modified: 2026-05-02T02:08:00+03:00

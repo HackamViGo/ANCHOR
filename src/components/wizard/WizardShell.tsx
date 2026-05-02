@@ -6,7 +6,6 @@ import {
   selectCurrentPhase,
   selectIsLoading,
   selectError,
-  selectProjectState,
 } from "@/store/wizard.store";
 import { SafariPersistBanner } from "./SafariPersistBanner";
 import { StepProgress } from "./StepProgress";
@@ -53,18 +52,21 @@ export function WizardShell() {
   }, []);
 
   // ⚓ ANCHOR — Auto-save logic
-  const projectState = useWizardStore(selectProjectState);
+  const projectId = useWizardStore((state) => state.projectId);
+  const projectSpec = useWizardStore((state) => state.projectSpec);
+  const artifacts = useWizardStore((state) => state.artifacts);
+  const evidenceBundle = useWizardStore((state) => state.evidenceBundle);
   
   useEffect(() => {
-    if (projectState.projectId && projectState.projectSpec.title) {
+    if (projectId && projectSpec.title) {
       const timeout = setTimeout(async () => {
         try {
           await saveProject({
-            id: projectState.projectId as string,
-            spec: projectState.projectSpec as ProjectSpec, // Cast to complete spec for DB
+            id: projectId as string,
+            spec: projectSpec as ProjectSpec, // Cast to complete spec for DB
             phases: [], // To be populated with granular phase states
-            evidence: projectState.evidenceBundle,
-            artifacts: projectState.artifacts,
+            evidence: evidenceBundle,
+            artifacts: artifacts,
             updated_at: new Date().toISOString(),
           });
           console.log("⚓ Project auto-saved to Dexie");
@@ -75,7 +77,7 @@ export function WizardShell() {
       
       return () => clearTimeout(timeout);
     }
-  }, [projectState]);
+  }, [projectId, projectSpec, evidenceBundle, artifacts]);
 
   return (
     <div className="min-h-screen bg-background text-foreground">

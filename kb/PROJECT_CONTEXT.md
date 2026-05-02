@@ -18,25 +18,8 @@
 - **React2Shell Protection**: NEVER alter the React version in `package.json`. Project MUST stay on React >= 19.4.0 to avoid CVSS 10.0 RCE.
 - **Routing**: `middleware.ts` is DEPRECATED in Next.js 16.2. All proxy/routing logic must live in `src/lib/proxy.ts` or similar.
 - **Config**: `tailwind.config.js` is IGNORED by Tailwind v4. All config MUST be in `src/app/globals.css`.
-- **Security**: Evidence-first (HARD GATE) + BYOK (no stored secrets).
+- **Security**: BYOK (no stored secrets).
 
-## Non-negotiable Invariants
-
-### 1) Evidence-first (hard gate)
-- Every major recommendation MUST have an EvidenceItem:
-  `{ url, accessed_at, snippet <= 25 words }`
-- Evidence is exported as: `evidence/evidence.json`
-
-### 2) Deterministic Generation
-- All output paths stable-sorted.
-- SHA-256 computed per file.
-- `MANIFEST.json` required in exports.
-
-### 3) BYOK Secret Handling
-- No secrets in `localStorage`, `IndexedDB`, or exported ZIP.
-- API keys (Gemini, etc.) provided at runtime by the user (BYOK).
-
----
 
 ## 📄 Manifest of Artifacts (Base Pack)
 1. README.md
@@ -54,9 +37,16 @@
 ---
 
 ## 📁 Workspace Management
-- **temp/**: Local-only scratch directory for temporary assets, generated images, and experiment logs. 
+- **temp/**: Local-only scratch directory for temporary assets, generated images, and experiment logs.
   - **Status**: Added to `.gitignore`.
   - **Rule**: Content here is never committed. Can be purged at any time.
+
+- **skills/**: DOMAIN B skill templates — shipped inside the ZIP export to end-user projects.
+  - Path inside exported ZIP: `.agents/skills/{scope}/{name}/SKILL.md`
+  - These are minimal starter skeletons (stub SKILL.md files) for ANCHOR-generated agent packs.
+
+- **.agents/skills/**: DOMAIN A internal skills — for coding agents (Antigravity/Gemini/Claude) working on the ANCHOR codebase itself.
+  - Not exported. Used by agents reading GEMINI.md / AGENTS.md to help implement features.
 
 ---
 

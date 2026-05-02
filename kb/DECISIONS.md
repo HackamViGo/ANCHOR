@@ -12,7 +12,7 @@ ANCHOR is BYOK-first: the user provides their own Gemini API key in MVP.
 ### Consequences
 - Keys must be memory-only by default.
 - No server-side prompt/key storage in MVP.
-- Product messaging is explicit: ANCHOR does not “solve AI cost”.
+- Product messaging is explicit: ANCHOR does not "solve AI cost".
 
 ---
 
@@ -43,7 +43,7 @@ Choose A for MVP.
 All Markdown outputs are derived artifacts.
 
 ### Consequences
-- Validation runs on the spec and artifacts, not on “whatever the markdown says”.
+- Validation runs on the spec and artifacts, not on "whatever the markdown says".
 - Spec changes require updating `API_SPEC.md`.
 
 ---
@@ -60,6 +60,7 @@ exported as `evidence/evidence.json`.
 ### Consequences
 - Missing evidence is a validation **BLOCKER**.
 - Docs must reference evidence IDs where applicable.
+- Full spec lives in `AGENTS.md § B.1`.
 
 ---
 
@@ -68,10 +69,10 @@ exported as `evidence/evidence.json`.
 **Date:** 2026-04-30
 
 ### Decision
-- `GEMINI.md` is intentionally small:
-  - read-order
-  - one instruction: “Full rules: read AGENTS.md now.”
-- `AGENTS.md` holds the full rules.
+- `GEMINI.md` is intentionally small: read-order + pointer to `AGENTS.md`.
+- `AGENTS.md` holds the full rules in **two distinct domains**:
+  - **Domain A**: rules for coding agents working on the ANCHOR codebase.
+  - **Domain B**: product invariants for agents operating inside ANCHOR-generated projects.
 - A symlink helper script will be generated later to map:
   - `CLAUDE.md` → `AGENTS.md`
   - `.github/copilot-instructions.md` → `AGENTS.md`
@@ -80,6 +81,7 @@ exported as `evidence/evidence.json`.
 ### Consequences
 - Prevents policy drift across agent entrypoints.
 - Keeps Gemini integrations predictable.
+- Domain separation eliminates confusion between coding rules and product invariants.
 
 ---
 
@@ -111,6 +113,7 @@ Export skills to:
 ### Consequences
 - MVP remains shippable without over-blocking.
 - Phase 1+ may upgrade selected warnings to blockers.
+- Full spec lives in `AGENTS.md § B.2`.
 
 ---
 
@@ -126,8 +129,8 @@ Deterministic ZIP export:
 
 ### Consequences
 - Determinism must be unit-tested and integration-tested.
+- Full spec lives in `AGENTS.md § B.4`.
 
----
 ---
 
 ## ADR-0009 — Data persistence: RAM (Secrets) vs IndexedDB (State)
@@ -143,7 +146,6 @@ Deterministic ZIP export:
 - Prevents data loss during crashes/refreshes.
 - Maintains strict "No stored secrets" policy.
 - Minor UX friction (re-pasting key) is acceptable for security.
-
 
 ---
 
@@ -163,4 +165,49 @@ Deterministic ZIP export:
 - Requires manual/automated maintenance to prevent graph bloat.
 
 ---
-Last Modified: 2026-05-01T23:48:06+03:00
+
+## ADR-0011 — AGENTS.md two-domain architecture
+**Status:** Accepted  
+**Date:** 2026-05-02
+
+### Context
+AGENTS.md was conflating rules for coding agents (Antigravity/Gemini/Claude working on the ANCHOR codebase) with product invariants describing what the ANCHOR application must generate for end users.
+
+### Decision
+Split `AGENTS.md` into two explicitly labeled domains:
+- **Domain A** — Coding Agent Rules: Code quality, security, testing, workflow principles, hard invariants (branching, stack gotchas), Definition of Done.
+- **Domain B** — App Product Invariants: Evidence-first, Skill safety, BYOK handling, Deterministic export, Conflict resolution strategy, Major recommendation definition.
+
+The `Definition of Done` (typecheck, tests, lint, docs updated) is **shared** — it applies to both domains.
+
+### Consequences
+- Coding agents can immediately identify which rules apply to their context.
+- Product invariants are co-located with implementation spec (Domain B sections include `> Applies to: [module]` tags).
+- `kb/ARCHITECTURE.md` remains the canonical source for product invariants; Domain B in AGENTS.md is the implementation-facing summary.
+- `CLAUDE.md` is kept as a full mirror of `AGENTS.md` for Claude agent compatibility.
+
+---
+
+## ADR-0012 — Two-directory skills architecture
+**Status:** Accepted  
+**Date:** 2026-05-02
+
+### Context
+Skills were stored in a single location, creating confusion about whether they are for the ANCHOR codebase agents or for end-user generated projects.
+
+### Decision
+Maintain two distinct skills directories:
+- **`skills/`** (root) — DOMAIN B: minimal SKILL.md stubs that get packaged into the exported ZIP for end-user projects. These are templates, not full implementations.
+- **`.agents/skills/`** — DOMAIN A: full, rich skill implementations used by coding agents (Antigravity/Gemini/Claude) working on the ANCHOR codebase itself. These are never exported.
+
+Export path in ZIP remains: `.agents/skills/{scope}/{name}/SKILL.md` (ADR-0006 unchanged).
+
+### Consequences
+- Eliminates confusion about which skills apply to the ANCHOR development workflow vs exported packs.
+- `skills/` stubs should be kept minimal — they are scaffolds for agent-generated blueprints.
+- `.agents/skills/` should be kept rich and current — they are the actual guidance for ANCHOR development.
+- `sync-docs` workflow must verify both directories are consistent with this contract.
+
+---
+Last Modified: 2026-05-02T03:21:00+03:00
+

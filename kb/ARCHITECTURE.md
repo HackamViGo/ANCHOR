@@ -128,9 +128,14 @@ Validation categories:
 ## Agent entrypoint architecture
 
 - `GEMINI.md` is intentionally minimal: it defines read order and points to `AGENTS.md`.
-- `AGENTS.md` contains the full policy surface area.
-- (Planned) a symlink helper script will map `CLAUDE.md`, Copilot instructions, and Cursor rules to `AGENTS.md`.
+- `AGENTS.md` contains the full policy surface area in **two distinct domains** (ADR-0011):
+  - **Domain A** — Coding agent rules (for Antigravity / Gemini / Claude working on this codebase).
+  - **Domain B** — App product invariants (for agents operating inside ANCHOR-generated projects). Each section includes an `> Applies to:` tag naming the relevant module.
+- `CLAUDE.md` is a full mirror of `AGENTS.md` for Claude agent compatibility.
+- (Planned) a symlink helper script will map Copilot instructions and Cursor rules to `AGENTS.md`.
+
+> The product invariants documented above (Evidence-first, Skills, BYOK, Deterministic export) are the canonical source here. Their implementation spec lives in `AGENTS.md § Domain B`.
 
 
 ---
-Last Modified: 2026-05-01T23:23:41+03:00
+Last Modified: 2026-05-02T02:08:00+03:00

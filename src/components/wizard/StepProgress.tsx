@@ -49,7 +49,7 @@ export function StepProgress({ phases, current }: StepProgressProps) {
                   )}
                   <div
                     className={cn(
-                      "flex items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-1 text-sm font-medium transition-colors",
+                      "flex items-center gap-1.5 whitespace-nowrap border border-border px-3 py-1 text-sm font-medium transition-colors",
                       isActive && "bg-primary text-primary-foreground",
                       isComplete && !isActive && "bg-primary/20 text-primary",
                       !isActive && !isComplete && "text-muted-foreground",
